@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # LLVM internal representation
-tac.llvm
+llvm-ir

@@ -1,0 +1,6 @@
+main
+[
+  var a 30
+  a := 1 + a * 3
+  giveback a
+]
