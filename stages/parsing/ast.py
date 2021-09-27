@@ -111,7 +111,7 @@ class Variable():
         pointer = self.symbol_table.get(var_name, None)
         if not pointer:
             raise AssertionError(
-                f"The var '{var_name}' in line: {self.var.source_pos} is not defined")
+                f"The var '{var_name}' in line: {self.variable.source_pos} is not defined")
         value = self.builder.load(pointer)
         return value
 
@@ -164,11 +164,11 @@ class Assign():
         var_ptr = self.symbol_table.get(var_name, None)
         if not var_ptr:
             raise AssertionError(
-                f"The var '{var_name}' in line: {self.var.source_pos} is not defined")
+                f"The var '{var_name}' in line: {self.variable.variable.source_pos} is not defined")
         self.builder.store(self.value.eval(), var_ptr)
 
 
-class GiveBack():
+class End():
     def __init__(self, builder, module, expression):
         self.builder = builder
         self.module = module

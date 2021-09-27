@@ -6,19 +6,12 @@ class Lexer:
         self.lexer = LexerGenerator()
 
     def _set_tokens(self):
-        # Log
-        self.lexer.add("LOG", r"log")
-
         # Main
         self.lexer.add("MAIN", r"main")
-
-        # Read input
-        self.lexer.add("INPUT", r"input")
 
         # Parenthesis
         self.lexer.add("OPEN_PAREN", r"\(")
         self.lexer.add("CLOSE_PAREN", r"\)")
-
         # Brackets
         self.lexer.add("OPEN_BRACKET", r"\[")
         self.lexer.add("CLOSE_BRACKET", r"\]")
@@ -38,8 +31,8 @@ class Lexer:
 
         # Functions
         self.lexer.add('ITERATE', r"iterate")
-        self.lexer.add('UNTIL', r"until")
-        self.lexer.add("GIVEBACK", r"giveback")
+        self.lexer.add('AS_LONG_AS', r"as long as")
+        self.lexer.add("END", r"end")
 
         # Conditional Operators
         self.lexer.add('LOWEREQ', r'<=')

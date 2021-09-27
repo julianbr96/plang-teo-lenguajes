@@ -1,0 +1,11 @@
+main
+[
+  var a 20
+  var b 10
+  whether a < 21
+  [
+    b := 12
+  ] 
+  or not []
+  end b
+]

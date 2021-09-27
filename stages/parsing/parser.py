@@ -1,5 +1,5 @@
 from rply import ParserGenerator
-from .ast import Assign, Number, Add, Statements, Sub, Mul, Div, Variable, Whether_not, Predicate, Declaration, Iterator, GiveBack
+from .ast import Assign, Number, Add, Statements, Sub, Mul, Div, Variable, Whether_not, Predicate, Declaration, Iterator, End
 
 
 class Parser():
@@ -14,13 +14,11 @@ class Parser():
                 "RES",
                 "MUL",
                 "DIV",
-                "LOG",
-                "INPUT",
                 "OPEN_BRACKET",
                 "CLOSE_BRACKET",
                 "MAIN",
                 "ITERATE",
-                "UNTIL",
+                "AS_LONG_AS",
                 "LOWEREQ",
                 "GREATEREQ",
                 "EQUAL",
@@ -32,7 +30,7 @@ class Parser():
                 "ASSIGN",
                 "WHETHER",
                 "OR_NOT",
-                "GIVEBACK"
+                "END"
             ],
             # A list of precedence rules with ascending precedence, to
             # disambiguate ambiguous production rules.
@@ -43,7 +41,7 @@ class Parser():
         self.symbol_table = {}
 
     def parse(self):
-        @self.pg.production('main-program : MAIN OPEN_BRACKET statements giveback CLOSE_BRACKET')
+        @self.pg.production('main-program : MAIN OPEN_BRACKET statements end CLOSE_BRACKET')
         def program(p):
             p[2].eval()
             p[3].eval()
@@ -60,14 +58,14 @@ class Parser():
         @self.pg.production('statements : statements initialization')
         @self.pg.production('statements : statements assignment')
         @self.pg.production('statements : statements iterator')
-        @self.pg.production('statements : statements giveback')
+        @self.pg.production('statements : statements end')
         def statements(p):
             p[0].append(p[1])
             return p[0]
 
         @self.pg.production('expression : WHETHER predicate code-block OR_NOT code-block')
         def conditional(p):
-            return Whether_not(self.builder, self.module, p[1], p[2], p[3])
+            return Whether_not(self.builder, self.module, p[1], p[2], p[4])
 
         @self.pg.production('predicate : expression predicate-op expression')
         def predicate(p):
@@ -122,7 +120,7 @@ class Parser():
                 raise AssertionError(
                     f"The operator '{p[1].gettokentype()}' in line: {p[1].source_pos} is not valid")
 
-        @self.pg.production('iterator : ITERATE code-block UNTIL predicate')
+        @self.pg.production('iterator : ITERATE code-block AS_LONG_AS predicate')
         def iterator(p):
             return Iterator(self.builder, self.module, p[3], p[1])
 
@@ -130,9 +128,9 @@ class Parser():
         def assignment(p):
             return Assign(self.builder, self.module, p[0], p[2], self.symbol_table)
 
-        @self.pg.production('giveback : GIVEBACK expression')
+        @self.pg.production('end : END expression')
         def ret(p):
-            return GiveBack(self.builder, self.module, p[1])
+            return End(self.builder, self.module, p[1])
 
         @self.pg.error
         def error_handler(token):

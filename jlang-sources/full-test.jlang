@@ -1,0 +1,16 @@
+main
+[
+  var x 20
+  var y x
+  var res 0
+  iterate [
+    whether y < (x/2)
+    [
+      res:=res+y*2+1
+    ] or not [
+      res:=res+y*3-1
+    ]
+    y := y - 1
+  ] as long as y == 0
+  end res
+]
