@@ -34,7 +34,7 @@ class Parser():
             ],
             # A list of precedence rules with ascending precedence, to
             # disambiguate ambiguous production rules.
-            precedence=[("left", ["ADD", "RES"]), ("left", ["MUL", "DIV"])],
+            precedence=[("right", ["ADD", "RES"]), ("right", ["MUL"])],
         )
         self.module = module
         self.builder = builder

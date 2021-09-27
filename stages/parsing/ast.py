@@ -11,6 +11,7 @@ class Number(BaseBox):
 
     def eval(self):
         internal = ir.Constant(INT32, int(self.value))
+        print(f"NUMBER {self.value}")
         return internal
 
 
@@ -27,6 +28,7 @@ class Add(BinaryOp):
         right = self.right.eval()
         left = self.left.eval()
         internal = self.builder.add(right, left)
+        print(f"ADD {self.right} {self.left}")
         return internal
 
 
@@ -35,6 +37,7 @@ class Sub(BinaryOp):
         right = self.right.eval()
         left = self.left.eval()
         internal = self.builder.sub(right, left)
+        print(f"RES {self.right} {self.left}")
         return internal
 
 
@@ -43,6 +46,7 @@ class Mul(BinaryOp):
         right = self.right.eval()
         left = self.left.eval()
         internal = self.builder.mul(right, left)
+        print(f"MUL {self.right} {self.left}")
         return internal
 
 
@@ -50,7 +54,8 @@ class Div(BinaryOp):
     def eval(self):
         right = self.right.eval()
         left = self.left.eval()
-        internal = self.builder.udiv(right, left)
+        internal = self.builder.sdiv(right, left)
+        print(f"DIV {self.right} {self.left}")
         return internal
 
 
@@ -63,6 +68,8 @@ class Whether_not():
         self.otherwise = otherwise
 
     def eval(self):
+        print(
+            f"WHETHER NOT {self.predicate.right} {self.predicate.pred_op} {self.predicate.left}")
         with self.builder.if_else(self.predicate.eval()) as (then, otherwise):
             with then:
                 self.then.eval()
@@ -80,6 +87,7 @@ class Statements():
         self.statements.append(statement)
 
     def eval(self):
+        print(f"STATEMENTS {self.statements}")
         # Evaluate all statements 1 by 1
         for statement in self.statements:
             statement.eval()
@@ -94,6 +102,7 @@ class Declaration():
         self.symbol_table = symbol_table
 
     def eval(self):
+        print(f"INITIALIZE {self.var_name} {self.value}")
         var_ptr = self.builder.alloca(INT32)
         self.symbol_table[self.var_name] = var_ptr
         self.builder.store(self.value.eval(), var_ptr)
@@ -108,6 +117,7 @@ class Variable():
 
     def eval(self):
         var_name = self.variable.value
+        print(f"VARIABLE {var_name}")
         pointer = self.symbol_table.get(var_name, None)
         if not pointer:
             raise AssertionError(
@@ -125,8 +135,9 @@ class Predicate():
         self.right = right
 
     def eval(self):
+        print(f"PREDICATE {self.left} {self.pred_op} {self.right}")
         pred_op = self.pred_op
-        i = self.builder.icmp_unsigned(
+        i = self.builder.icmp_signed(
             pred_op, self.left.eval(), self.right.eval())
         return i
 
@@ -139,6 +150,7 @@ class Iterator():
         self.block = block
 
     def eval(self):
+        print(f"ITERATOR {self.predicate}")
         body = self.builder.append_basic_block("iterator_expression")
         after = self.builder.append_basic_block("iterator_after")
 
@@ -161,6 +173,7 @@ class Assign():
 
     def eval(self):
         var_name = self.variable.variable.value
+        print(f"ASSIGN {var_name} {self.value}")
         var_ptr = self.symbol_table.get(var_name, None)
         if not var_ptr:
             raise AssertionError(
@@ -175,5 +188,6 @@ class End():
         self.expression = expression
 
     def eval(self):
-        i = self.builder.ret(self.expression.eval())
-        return i
+        internal = self.builder.ret(self.expression.eval())
+        print(f"END {self.expression}")
+        return internal
