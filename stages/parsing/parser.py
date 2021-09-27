@@ -3,7 +3,7 @@ from .ast import Number, BinaryOp, Add, Sub, Mul, Div
 
 
 class Parser():
-    def __init__(self):
+    def __init__(self, module, builder, outf):
         self.pg = ParserGenerator(
             # A list of all token names, accepted by the parser.
             [
@@ -27,6 +27,9 @@ class Parser():
             # disambiguate ambiguous production rules.
             precedence=[("left", ["ADD", "RES"]), ("left", ["MUL", "DIV"])],
         )
+        self.module = module
+        self.builder = builder
+        self.outf = outf
 
     def parse(self):
         @self.pg.production('expression : MAIN OPEN_BRACKET expression CLOSE_BRACKET')
@@ -55,13 +58,13 @@ class Parser():
             left = p[0]
             right = p[2]
             if p[1].gettokentype() == "ADD":
-                return Add(left, right)
+                return Add(self.builder, self.module, left, right)
             elif p[1].gettokentype() == "RES":
-                return Sub(left, right)
+                return Sub(self.builder, self.module, left, right)
             elif p[1].gettokentype() == "MUL":
-                return Mul(left, right)
+                return Mul(self.builder, self.module, left, right)
             elif p[1].gettokentype() == "DIV":
-                return Div(left, right)
+                return Div(self.builder, self.module, left, right)
             else:
                 raise AssertionError("Oops, this should not be possible!")
 

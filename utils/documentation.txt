@@ -1,2 +1,5 @@
 https://github.com/Elisis/Mendl/tree/master/compiler
 https://rply.readthedocs.io/en/latest/#api-documentation
+https://github.com/numba/llvmlite
+https://releases.llvm.org/11.0.0/docs/LangRef.html
+https://llvmlite.readthedocs.io/en/latest/
