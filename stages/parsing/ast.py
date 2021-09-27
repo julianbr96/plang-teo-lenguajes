@@ -27,8 +27,8 @@ class Add(BinaryOp):
     def eval(self):
         right = self.right.eval()
         left = self.left.eval()
-        internal = self.builder.add(right, left)
-        print(f"ADD {self.right} {self.left}")
+        internal = self.builder.add(left, right)
+        print(f"ADD {self.left} {self.right}")
         return internal
 
 
@@ -36,8 +36,8 @@ class Sub(BinaryOp):
     def eval(self):
         right = self.right.eval()
         left = self.left.eval()
-        internal = self.builder.sub(right, left)
-        print(f"RES {self.right} {self.left}")
+        internal = self.builder.sub(left, right)
+        print(f"RES {self.left} {self.right}")
         return internal
 
 
@@ -45,8 +45,8 @@ class Mul(BinaryOp):
     def eval(self):
         right = self.right.eval()
         left = self.left.eval()
-        internal = self.builder.mul(right, left)
-        print(f"MUL {self.right} {self.left}")
+        internal = self.builder.mul(left, right)
+        print(f"MUL {self.left} {self.right}")
         return internal
 
 
@@ -54,8 +54,8 @@ class Div(BinaryOp):
     def eval(self):
         right = self.right.eval()
         left = self.left.eval()
-        internal = self.builder.sdiv(right, left)
-        print(f"DIV {self.right} {self.left}")
+        internal = self.builder.sdiv(left, right)
+        print(f"DIV {self.left} {self.right}")
         return internal
 
 
@@ -69,7 +69,7 @@ class Whether_not():
 
     def eval(self):
         print(
-            f"WHETHER NOT {self.predicate.right} {self.predicate.pred_op} {self.predicate.left}")
+            f"WHETHER NOT {self.predicate.left} {self.predicate.pred_op} {self.predicate.right}")
         with self.builder.if_else(self.predicate.eval()) as (then, otherwise):
             with then:
                 self.then.eval()
